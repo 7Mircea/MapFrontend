@@ -113,28 +113,21 @@
 	height: 600px;
 	border: 3px solid #73AD21;
 	padding: 10px;">
-		<button id="get-btn">GET Data</button><br/>
-		<button id="post-btn">POST Data</button><br/>
-		<!-- Load icon library -->
-
 
 
 
 		<input id="search-city-input" type="text" placeholder="Search city" name="search">
 		<button id="search-city-btn" type="submit">Search city</button><br/>
-		<input id="search-province-input" type="text" placeholder="Search province" name="search">
-		<button id="search-province-btn" type="submit">Search province</button><br/>
-		<input id="search-region-input" type="text" placeholder="Search region" name="search">
-		<button id="search-region-btn" type="submit">Search region</button><br/>
 		<input id="search-country-input" type="text" placeholder="Search country" name="search">
 		<button id="search-country-btn" type="submit">Search country</button><br/>
 
 	</section>
 	<script>
-		const getBtn = document.getElementById('get-btn');
-		const postBtn = document.getElementById('post-btn');
-		const searchButton = document.getElementById('search-city-btn');
-		const searchInput = document.getElementById('search-city-input');
+		
+		const searchCityButton = document.getElementById('search-city-btn');
+		const searchCityInput = document.getElementById('search-city-input');
+		const searchCountryButton = document.getElementById('search-country-btn');
+		const searchCountryInput = document.getElementById('search-country-input');
 
 		const sendHttpRequest = (method, url, data) => {
 			const promise = new Promise((resolve, reject) => {
@@ -165,17 +158,22 @@
 			return promise;
 		};
 
-		const getData = () => {
-			sendHttpRequest('GET', 'http://localhost:8080/api/v1/restaurants/Saint-Jouvent').then(responseData => {
+		
+
+		const searchCity = () => {
+			let city = searchCityInput.value;
+			let url = 'http://localhost:8080/api/v1/restaurants/city/' + city;
+			console.log(url);
+			sendHttpRequest('GET', url).then(responseData => {
 				for (let i = 0; i < responseData.length; i++) {
 					L.marker([responseData[i].latitude, responseData[i].longitude]).addTo(mymap);
 				}
 			});
-		};
+		}
 
-		const searchCity = () => {
-			let city = searchInput.value;
-			let url = 'http://localhost:8080/api/v1/restaurants/' + city;
+		const searchCountry = () => {
+			let country = searchCountryInput.value;
+			let url = 'http://localhost:8080/api/v1/restaurants/country/' + country;
 			console.log(url);
 			sendHttpRequest('GET', url).then(responseData => {
 				for (let i = 0; i < responseData.length; i++) {
@@ -185,8 +183,9 @@
 		}
 
 
-		getBtn.addEventListener('click', getData);
-		searchButton.addEventListener('click', searchCity);
+		
+		searchCityButton.addEventListener('click', searchCity);
+		searchCountryButton.addEventListener('click',searchCountry);
 
 		var mymap = L.map('map').setView([45.954654, 1.203345], 13);
 
